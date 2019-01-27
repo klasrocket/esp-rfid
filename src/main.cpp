@@ -32,9 +32,7 @@ SOFTWARE.
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <TimeLib.h>
-//#include <Ticker.h>
 #include "Ntp.h"
-//#include <AsyncMqttClient.h>
 
  //#define DEBUG
 
@@ -82,8 +80,6 @@ extern "C" {
 #endif
 
 NtpClient NTP;
-//AsyncMqttClient mqttClient;
-//Ticker mqttReconnectTimer;
 WiFiEventHandler wifiDisconnectHandler, wifiConnectHandler;
 
 AsyncWebServer server(80);
@@ -138,7 +134,6 @@ unsigned long nextbeat = 0;
 unsigned long interval = 1800;
 
 #include "log.esp"
-//#include "mqtt.esp"
 #include "helpers.esp"
 #include "wsResponses.esp"
 #include "rfid.esp"
@@ -363,20 +358,4 @@ void ICACHE_RAM_ATTR loop()
 			enableWifi();
 		}
 	}
-
-	//if (mqttenabled == 1)
-// 	//{
-// 		if (mqttClient.connected())
-// 		{
-// 			if ((unsigned)now() > nextbeat)
-// 			{
-// 				mqtt_publish_heartbeat(now());
-// 				nextbeat = (unsigned)now() + interval;
-// #ifdef DEBUG
-// 				Serial.print("[ INFO ] Nextbeat=");
-// 				Serial.println(nextbeat);
-// #endif
-// 			}
-// 		}
-// 	}
 }
