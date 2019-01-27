@@ -15,11 +15,10 @@ void onWifiConnect(const WiFiEventStationModeConnected &event)
 #ifdef DEBUG
 	Serial.println(F("\n[ INFO ] WiFi STA Connected"));
 #endif
-	//mqttReconnectTimer.detach();
+
 }
 void onWifiDisconnect(const WiFiEventStationModeDisconnected &event)
 {
-	mqttReconnectTimer.detach();
 	if (wifiFlag)
 	{
 #ifdef DEBUG

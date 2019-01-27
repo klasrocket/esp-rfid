@@ -32,9 +32,9 @@ SOFTWARE.
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <TimeLib.h>
-#include <Ticker.h>
+//#include <Ticker.h>
 #include "Ntp.h"
-#include <AsyncMqttClient.h>
+//#include <AsyncMqttClient.h>
 
  //#define DEBUG
 
@@ -82,8 +82,8 @@ extern "C" {
 #endif
 
 NtpClient NTP;
-AsyncMqttClient mqttClient;
-Ticker mqttReconnectTimer;
+//AsyncMqttClient mqttClient;
+//Ticker mqttReconnectTimer;
 WiFiEventHandler wifiDisconnectHandler, wifiConnectHandler;
 
 AsyncWebServer server(80);
@@ -122,8 +122,8 @@ unsigned long wifiTimeout = 0;
 unsigned long wiFiUptimeMillis = 0;
 char *deviceHostname = NULL;
 
-int mqttenabled = 0;
-char *mqttTopic = NULL;
+//int uabled = 0;
+//char *mqttTopic = NULL;
 char *mhs = NULL;
 char *muser = NULL;
 char *mpas = NULL;
@@ -138,7 +138,7 @@ unsigned long nextbeat = 0;
 unsigned long interval = 1800;
 
 #include "log.esp"
-#include "mqtt.esp"
+//#include "mqtt.esp"
 #include "helpers.esp"
 #include "wsResponses.esp"
 #include "rfid.esp"
@@ -265,7 +265,7 @@ void ICACHE_RAM_ATTR loop()
 				Serial.print("mili : ");
 				Serial.println(millis());
 				Serial.println("deactivating relay now");
-#endif				
+#endif
 				digitalWrite(relayPin, !relayType);
 			}
 			activateRelay = false;
@@ -364,19 +364,19 @@ void ICACHE_RAM_ATTR loop()
 		}
 	}
 
-	if (mqttenabled == 1)
-	{
-		if (mqttClient.connected())
-		{
-			if ((unsigned)now() > nextbeat)
-			{
-				mqtt_publish_heartbeat(now());
-				nextbeat = (unsigned)now() + interval;
-#ifdef DEBUG
-				Serial.print("[ INFO ] Nextbeat=");
-				Serial.println(nextbeat);
-#endif
-			}
-		}
-	}
+	//if (mqttenabled == 1)
+// 	//{
+// 		if (mqttClient.connected())
+// 		{
+// 			if ((unsigned)now() > nextbeat)
+// 			{
+// 				mqtt_publish_heartbeat(now());
+// 				nextbeat = (unsigned)now() + interval;
+// #ifdef DEBUG
+// 				Serial.print("[ INFO ] Nextbeat=");
+// 				Serial.println(nextbeat);
+// #endif
+// 			}
+// 		}
+// 	}
 }
