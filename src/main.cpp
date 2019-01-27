@@ -35,16 +35,16 @@ SOFTWARE.
 #include "Ntp.h"
 #include <Servo.h>
 
- #define DEBUG
+#define DEBUG
 
 #include <MFRC522.h>
 #include "PN532.h"
-#include <Wiegand.h>
+//#include <Wiegand.h>
 #include "rfid125kHz.h"
 
 MFRC522 mfrc522 = MFRC522();
 PN532 pn532;
-WIEGAND wg;
+//WIEGAND wg;
 RFID_Reader RFIDr;
 Servo myservo;  // create servo object to control a servo
 
@@ -109,8 +109,6 @@ unsigned long wifiTimeout = 0;
 unsigned long wiFiUptimeMillis = 0;
 char *deviceHostname = NULL;
 
-//int mqttenabled = 0;
-//char *mqttTopic = NULL;
 char *mhs = NULL;
 char *muser = NULL;
 char *mpas = NULL;
@@ -126,7 +124,6 @@ unsigned long nextbeat = 0;
 unsigned long interval = 1800;
 
 #include "log.esp"
-//#include "mqtt.esp"
 #include "helpers.esp"
 #include "wsResponses.esp"
 #include "rfid.esp"
@@ -379,20 +376,4 @@ void ICACHE_RAM_ATTR loop()
 			enableWifi();
 		}
 	}
-
-	//if (mqttenabled == 1)
-// 	//{
-// 		if (mqttClient.connected())
-// 		{
-// 			if ((unsigned)now() > nextbeat)
-// 			{
-// 				mqtt_publish_heartbeat(now());
-// 				nextbeat = (unsigned)now() + interval;
-// #ifdef DEBUG
-// 				Serial.print("[ INFO ] Nextbeat=");
-// 				Serial.println(nextbeat);
-// #endif
-// 			}
-// 		}
-// 	}
 }

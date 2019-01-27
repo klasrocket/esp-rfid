@@ -33,23 +33,6 @@ void ICACHE_FLASH_ATTR rfidloop()
 		Serial.print(" " + type);
 #endif
 	}
-	else if (readerType == 1)
-	{
-		if (wg.available())
-		{
-#ifdef DEBUG
-			Serial.print(F("[ INFO ] PICC's UID: "));
-			Serial.println(wg.getCode());
-#endif
-			uid = String(wg.getCode(), DEC);
-			type = String(wg.getWiegandType(), DEC);
-			cooldown = millis() + 2000;
-		}
-		else
-		{
-			return;
-		}
-	}
 	else if (readerType == 2)
 	{
 		bool found = false;
@@ -134,23 +117,6 @@ void ICACHE_FLASH_ATTR rfidloop()
 #endif
 		}
 
-		else if (readerType == 5 && uid.length() == 0)
-		{
-			if (wg.available())
-			{
-#ifdef DEBUG
-				Serial.print(F("[ INFO ] PICC's UID: "));
-				Serial.println(wg.getCode());
-#endif
-				uid = String(wg.getCode(), DEC);
-				type = String(wg.getWiegandType(), DEC);
-				cooldown = millis() + 2000;
-			}
-			else
-			{
-				return;
-			}
-		}
 
 		else if (readerType == 6 && uid.length() == 0)
 		{
@@ -187,23 +153,7 @@ void ICACHE_FLASH_ATTR rfidloop()
 		return;
 	}
 #endif
-#ifdef OFFICIALBOARD
-	if (wg.available())
-	{
-#ifdef DEBUG
-		Serial.print(F("[ INFO ] PICC's UID: "));
-		Serial.print(wg.getCode());
-#endif
-		uid = String(wg.getCode(), DEC);
-		type = String(wg.getWiegandType(), HEX);
-		cooldown = millis() + 2000;
-	}
-	else
-	{
-		delay(50);
-		return;
-	}
-#endif
+
 	int AccType = 0;
 	String filename = "/P/";
 	filename += uid;
@@ -345,11 +295,6 @@ void ICACHE_FLASH_ATTR ShowMFRC522ReaderDetails()
 }
 #endif
 #endif
-
-void ICACHE_FLASH_ATTR setupWiegandReader(int d0, int d1)
-{
-	wg.begin(d0, d1);
-}
 
 #ifndef OFFICIALBOARD
 void ICACHE_FLASH_ATTR setupMFRC522Reader(int rfidss, int rfidgain)
