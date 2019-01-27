@@ -63,28 +63,28 @@ void ICACHE_FLASH_ATTR rfidloop()
 	}
 	else if (readerType > 2)
 	{
-		while (Serial.available() > 0)
-		{
-			RFIDr.rfidSerial(Serial.read());
-		}
-		if (RFIDr.Available())
-		{
-			uid = RFIDr.GetHexID();
-			type = RFIDr.GetTagType();
-			cooldown = millis() + 2000;
-#ifdef DEBUG
-			Serial.print(F("[ INFO ] PICC's UID: "));
-			Serial.println(uid);
-#endif
-		}
-		else
-		{
-			if (readerType == 3)
-			{
-				delay(50);
-				return;
-			}
-		}
+		// while (Serial.available() > 0)
+		// {
+		// 	RFIDr.rfidSerial(Serial.read());
+		// }
+// 		if (RFIDr.Available())
+// 		{
+// 			uid = RFIDr.GetHexID();
+// 			type = RFIDr.GetTagType();
+// 			cooldown = millis() + 2000;
+// #ifdef DEBUG
+// 			Serial.print(F("[ INFO ] PICC's UID: "));
+// 			Serial.println(uid);
+// #endif
+// 		}
+		// else
+		// {
+		// 	if (readerType == 3)
+		// 	{
+		// 		delay(50);
+		// 		return;
+		// 	}
+		// }
 
 		if (readerType == 4 && uid.length() == 0)
 		{
