@@ -33,19 +33,9 @@ SOFTWARE.
 #include <ESPAsyncWebServer.h>
 #include <TimeLib.h>
 #include "Ntp.h"
+#include <Servo.h>
 
- //#define DEBUG
-
-#ifdef OFFICIALBOARD
-
-#include <Wiegand.h>
-
-WIEGAND wg;
-int relayPin = 13;
-
-#endif
-
-#ifndef OFFICIALBOARD
+ #define DEBUG
 
 #include <MFRC522.h>
 #include "PN532.h"
@@ -56,12 +46,13 @@ MFRC522 mfrc522 = MFRC522();
 PN532 pn532;
 WIEGAND wg;
 RFID_Reader RFIDr;
+Servo myservo;  // create servo object to control a servo
 
 int rfidss;
 int readerType;
 int relayPin;
 
-#endif
+//#endif
 
 // these are from vendors
 #include "webh/glyphicons-halflings-regular.woff.gz.h"
@@ -118,7 +109,7 @@ unsigned long wifiTimeout = 0;
 unsigned long wiFiUptimeMillis = 0;
 char *deviceHostname = NULL;
 
-//int uabled = 0;
+//int mqttenabled = 0;
 //char *mqttTopic = NULL;
 char *mhs = NULL;
 char *muser = NULL;
@@ -129,11 +120,13 @@ int lockType;
 int relayType;
 unsigned long activateTime;
 int timeZone;
+int servopos = 0;    // variable to store the servo position
 
 unsigned long nextbeat = 0;
 unsigned long interval = 1800;
 
 #include "log.esp"
+//#include "mqtt.esp"
 #include "helpers.esp"
 #include "wsResponses.esp"
 #include "rfid.esp"
@@ -144,12 +137,12 @@ unsigned long interval = 1800;
 
 void ICACHE_FLASH_ATTR setup()
 {
-#ifdef OFFICIALBOARD
-	// Set relay pin to LOW signal as early as possible
-	pinMode(13, OUTPUT);
-	digitalWrite(13, LOW);
-	delay(200);
-#endif
+myservo.attach(4);  // attaches the servo on pin 9 to the servo object
+
+myservo.write(0);
+delay(500);         // tell servo to go to position in variable 'pos'
+
+myservo.detach();
 
 #ifdef DEBUG
 	Serial.begin(9600);
@@ -245,23 +238,39 @@ void ICACHE_RAM_ATTR loop()
 		if (activateRelay)
 		{
 			// currently OFF, need to switch ON
+			//unlock------------------------------
+
 			if (digitalRead(relayPin) == !relayType)
 			{
 #ifdef DEBUG
 				Serial.print("mili : ");
 				Serial.println(millis());
 				Serial.println("activating relay now");
+				Serial.println("servo unlocks Continuous");
+
 #endif
-				digitalWrite(relayPin, relayType);
+
+				//digitalWrite(relayPin, relayType);
+				myservo.attach(relayPin);  // attaches the servo on pin 9 to the servo object
+				myservo.write(180);              // tell servo to go to position in variable 'pos'
+				delay(500);
+				myservo.detach();
 			}
+			//lock--------------------------------------------------
 			else	// currently ON, need to switch OFF
 			{
 #ifdef DEBUG
 				Serial.print("mili : ");
 				Serial.println(millis());
 				Serial.println("deactivating relay now");
+				Serial.println("servo locks");
+
 #endif
-				digitalWrite(relayPin, !relayType);
+				//digitalWrite(relayPin, !relayType);
+				myservo.attach(relayPin);  // attaches the servo on pin 9 to the servo object
+				myservo.write(0);
+				delay(500);             // tell servo to go to position in variable 'pos'
+				myservo.detach();
 			}
 			activateRelay = false;
 		}
@@ -274,8 +283,15 @@ void ICACHE_RAM_ATTR loop()
 			Serial.print("mili : ");
 			Serial.println(millis());
 			Serial.println("activating relay now");
+			Serial.println("servo unlocks moment");
+
 #endif
-			digitalWrite(relayPin, relayType);
+			//unlock-----------------------------------------
+			//digitalWrite(relayPin, relayType);
+			myservo.attach(relayPin);  // attaches the servo on pin 9 to the servo object
+			myservo.write(180);              // tell servo to go to position in variable 'pos'
+			delay(500);
+			myservo.detach();
 			previousMillis = millis();
 			activateRelay = false;
 			deactivateRelay = true;
@@ -291,7 +307,12 @@ void ICACHE_RAM_ATTR loop()
 			Serial.print("mili : ");
 			Serial.println(millis());
 #endif
-			digitalWrite(relayPin, !relayType);
+			//lock--------------------------------------------------
+			//digitalWrite(relayPin, !relayType);
+			myservo.attach(relayPin);  // attaches the servo on pin 9 to the servo object
+			myservo.write(0);
+			delay(500);             // tell servo to go to position in variable 'pos'
+			myservo.detach();
 			deactivateRelay = false;
 		}
 	}
@@ -358,4 +379,20 @@ void ICACHE_RAM_ATTR loop()
 			enableWifi();
 		}
 	}
+
+	//if (mqttenabled == 1)
+// 	//{
+// 		if (mqttClient.connected())
+// 		{
+// 			if ((unsigned)now() > nextbeat)
+// 			{
+// 				mqtt_publish_heartbeat(now());
+// 				nextbeat = (unsigned)now() + interval;
+// #ifdef DEBUG
+// 				Serial.print("[ INFO ] Nextbeat=");
+// 				Serial.println(nextbeat);
+// #endif
+// 			}
+// 		}
+// 	}
 }

@@ -28,7 +28,6 @@ bool ICACHE_FLASH_ATTR loadConfiguration()
 	JsonObject &network = json["network"];
 	JsonObject &hardware = json["hardware"];
 	JsonObject &general = json["general"];
-//	JsonObject &mqtt = json["mqtt"];
 	JsonObject &ntp = json["ntp"];
 #ifdef DEBUG
 	Serial.println(F("[ INFO ] Trying to setup RFID Hardware"));
@@ -164,34 +163,6 @@ bool ICACHE_FLASH_ATTR loadConfiguration()
 	writeEvent("INFO", "ntp", "Connecting NTP Server", ip);
 	*/
 	NTP.Ntp(ntpserver, timeZone, ntpinter * 60);
-	//mqttenabled = mqtt["enabled"];
-// 	if (mqttenabled == 1)
-// 	{
-// #ifdef DEBUG
-// 		Serial.println("[ INFO ] Trying to setup MQTT");
-// #endif
-// 		String mhsString = mqtt["host"];
-// 		mhs = strdup(mhsString.c_str());
-//
-// 		mport = mqtt["port"];
-//
-// 		String muserString = mqtt["user"];
-// 		muser = strdup(muserString.c_str());
-// 		String mpasString = mqtt["pswd"];
-// 		mpas = strdup(mpasString.c_str());
-// 		String mqttTopicString = mqtt["topic"];
-// 		mqttTopic = strdup(mqttTopicString.c_str());
-//
-// 		mqttClient.setServer(mhs, mport);
-// 		mqttClient.setCredentials(muser, mpas);
-// 		mqttClient.onDisconnect(onMqttDisconnect);
-// 		mqttClient.onPublish(onMqttPublish);
-// 		mqttClient.onConnect(onMqttConnect);
-// #ifdef DEBUG
-// 		Serial.println("[ INFO ] try to call mqttconnect ");
-// #endif
-// 		connectToMqtt();
-// 	}
 #ifdef DEBUG
 	Serial.println(F("[ INFO ] Configuration done."));
 #endif

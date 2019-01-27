@@ -120,7 +120,6 @@ bool ICACHE_FLASH_ATTR connectSTA(const char *ssid, const char *password, byte b
 	{
 		// Assume time is out first and check
 #ifdef DEBUG
-		//Serial.println();
 		Serial.print(F("[ INFO ] Client IP address: "));
 		Serial.println(WiFi.localIP());
 #endif
