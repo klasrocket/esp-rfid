@@ -39,18 +39,15 @@ SOFTWARE.
 
 #include <MFRC522.h>
 #include "PN532.h"
-//#include <Wiegand.h>
-//#include "rfid125kHz.h"
 
 MFRC522 mfrc522 = MFRC522();
 PN532 pn532;
-//WIEGAND wg;
-//RFID_Reader RFIDr;
 Servo myservo;  // create servo object to control a servo
 
 int rfidss;
 int readerType;
 int relayPin;
+int button=0;
 
 //#endif
 
@@ -133,13 +130,16 @@ unsigned long interval = 1800;
 #include "webserver.esp"
 
 void ICACHE_FLASH_ATTR setup()
+
+
 {
 myservo.attach(4);  // attaches the servo on pin 9 to the servo object
 
-myservo.write(0);
+myservo.write(95);
 delay(500);         // tell servo to go to position in variable 'pos'
 
 myservo.detach();
+pinMode(button,INPUT_PULLUP);
 
 #ifdef DEBUG
 	Serial.begin(9600);
@@ -203,6 +203,18 @@ myservo.detach();
 
 void ICACHE_RAM_ATTR loop()
 {
+
+
+	if(digitalRead(button)==LOW)
+	 {
+		 delay(4000);
+		myservo.attach(4);  // attaches the servo on pin 9 to the servo object
+		myservo.write(0);
+	 	delay(500);
+	 	myservo.write(95);
+	 	delay(500);             // tell servo to go to position in variable 'pos'
+	 	myservo.detach();
+	}
 	currentMillis = millis();
 	deltaTime = currentMillis - previousLoopMillis;
 	uptime = NTP.getUptimeSec();
@@ -248,8 +260,8 @@ void ICACHE_RAM_ATTR loop()
 #endif
 
 				//digitalWrite(relayPin, relayType);
-				myservo.attach(relayPin);  // attaches the servo on pin 9 to the servo object
-				myservo.write(180);              // tell servo to go to position in variable 'pos'
+				myservo.attach(4);  // attaches the servo on pin 9 to the servo object
+				myservo.write(180);        // tell servo to go to position in variable 'pos'
 				delay(500);
 				myservo.detach();
 			}
@@ -264,8 +276,8 @@ void ICACHE_RAM_ATTR loop()
 
 #endif
 				//digitalWrite(relayPin, !relayType);
-				myservo.attach(relayPin);  // attaches the servo on pin 9 to the servo object
-				myservo.write(0);
+				myservo.attach(4);  // attaches the servo on pin 9 to the servo object
+				myservo.write(79);
 				delay(500);             // tell servo to go to position in variable 'pos'
 				myservo.detach();
 			}
@@ -285,9 +297,11 @@ void ICACHE_RAM_ATTR loop()
 #endif
 			//unlock-----------------------------------------
 			//digitalWrite(relayPin, relayType);
-			myservo.attach(relayPin);  // attaches the servo on pin 9 to the servo object
+			myservo.attach(4);  // attaches the servo on pin 9 to the servo object
 			myservo.write(180);              // tell servo to go to position in variable 'pos'
 			delay(500);
+			myservo.write(95);
+			delay(200);
 			myservo.detach();
 			previousMillis = millis();
 			activateRelay = false;
@@ -306,11 +320,15 @@ void ICACHE_RAM_ATTR loop()
 #endif
 			//lock--------------------------------------------------
 			//digitalWrite(relayPin, !relayType);
-			myservo.attach(relayPin);  // attaches the servo on pin 9 to the servo object
-			myservo.write(0);
-			delay(500);             // tell servo to go to position in variable 'pos'
-			myservo.detach();
-			deactivateRelay = false;
+
+			//
+			// myservo.attach(4);  // attaches the servo on pin 9 to the servo object
+			// myservo.write(0);
+			// delay(1000);
+			// myservo.write(80);
+			// delay(500);             // tell servo to go to position in variable 'pos'
+			// myservo.detach();
+			// deactivateRelay = false;
 		}
 	}
 

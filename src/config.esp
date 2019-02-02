@@ -42,25 +42,6 @@ bool ICACHE_FLASH_ATTR loadConfiguration()
 		}
 	}
 
-#ifndef OFFICIALBOARD
-	readerType = hardware["readerType"];
-if (readerType == 0 || readerType == 4)
-	{
-		rfidss = 15;
-		if (hardware.containsKey("sspin"))
-		{
-			rfidss = hardware["sspin"];
-		}
-		int rfidgain = hardware["rfidgain"];
-		setupMFRC522Reader(rfidss, rfidgain);
-	}
-	else if (readerType == 2 || readerType == 6)
-	{
-		rfidss = hardware["sspin"];
-		setupPN532Reader(rfidss);
-	}
-	if (readerType>2) Serial.begin(9600);
-#endif
 	autoRestartIntervalSeconds = general["restart"];
 	wifiTimeout = network["offtime"];
 	const char *bssidmac = network["bssid"];
@@ -81,11 +62,7 @@ if (readerType == 0 || readerType == 4)
 	activateTime = hardware["rtime"];
 	lockType = hardware["ltype"];
 	relayType = hardware["rtype"];
-#ifndef OFFICIALBOARD
-	relayPin = hardware["rpin"];
-	pinMode(relayPin, OUTPUT);
-	digitalWrite(relayPin, !relayType);
-#endif
+
 	const char *ssid = network["ssid"];
 	const char *password = network["pswd"];
 	wmode = network["wmode"];
